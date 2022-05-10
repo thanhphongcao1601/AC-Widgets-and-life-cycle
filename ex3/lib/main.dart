@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -168,7 +169,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int _total = 0;
-  String listBuy = "";
+  String _listBuy = "";
 
   @override
   Widget build(BuildContext context) {
@@ -189,56 +190,60 @@ class _MyHomePageState extends State<MyHomePage> {
     cats.add(cat4);
     cats.add(cat5);
 
-    // cats.add(cat6);
-    // cats.add(cat7);
-    // cats.add(cat8);
+    cats.add(cat6);
+    cats.add(cat7);
+
+    cats.add(cat3);
+    cats.add(cat4);
+    cats.add(cat5);
+    //cats.add(cat8);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 10,
+        // appBar: AppBar(
+        //   title: Text(widget.title),
+        // ),
+        body: SafeArea(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Container(
+            child: const Text(
+              "MENU",
+              style: const TextStyle(
+                  fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            Container(
-              child: Text(
-                "CAT LIST",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height / 6 * 3,
+            child: GridView.builder(
+              //shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 5.0,
+                childAspectRatio: 3 / 2, //chieu rong : chieu cao
               ),
-            ),
-            Container(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 5.0,
-                  childAspectRatio: 4 / 2, //chieu rong : chieu cao
-                ),
-                shrinkWrap: true,
-                itemCount: cats.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
+              itemCount: cats.length,
+              itemBuilder: (context, index) {
+                return Material(
+                  borderRadius: BorderRadius.circular(100),
+                  child: InkWell(
                     onTap: () {
                       setState(() {
                         _counter += 1;
                         _total += cats[index].age! * 2 * 1000;
-                        listBuy = listBuy +
+                        _listBuy = _listBuy +
                             "1 x " +
                             cats[index].name.toString() +
                             "\n";
                       });
-                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      //     content: Text(
-                      //         "Da them ${cats[index].toJson()} vao gio hang")));
                       print("Da them ${cats[index].toJson()} vao gio hang");
                     },
-                    child: Container(
+                    child: Ink(
                       child: Column(
                         children: [
                           Align(
@@ -248,26 +253,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                 height: 30,
                                 width: 30,
                                 child: Text("${index + 1}"),
-                                margin: EdgeInsets.all(10),
+                                margin: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                                 decoration: BoxDecoration(
                                     color: Colors.black12,
                                     borderRadius: BorderRadius.circular(100)),
                               )),
                           Text(
                             "${cats[index].name}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          const SizedBox(
-                            height: 5,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text("${cats[index].age} months"),
-                          Align(
-                              child: Container(
-                            alignment: Alignment.bottomRight,
-                            child: Text("${cats[index].age! * 2 * 1000} VND"),
-                            margin: EdgeInsets.all(10),
-                          )),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                              alignment: Alignment.bottomRight,
+                              child: Text("${cats[index].age! * 2 * 1000} VND"),
+                              margin: const EdgeInsets.only(right: 10)),
                         ],
                       ),
                       decoration: cats[index].gender == Gender.duc
@@ -303,64 +305,115 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ],
                                   )),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-            Expanded(
-                child: Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.all(10),
-              child: Text(
-                "${listBuy}",
-                style: TextStyle(fontSize: 20),
-              ),
-            )),
-            Column(
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.symmetric(horizontal: BorderSide(width: 1))
+            ),
+            padding: EdgeInsets.all(5),
+            child: Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black12, border: Border.all(width: 2)),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        textDirection: TextDirection.rtl,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text("${_counter}",
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold)),
-                          Text("Quantity: ", style: TextStyle(fontSize: 24)),
-                        ],
-                      ),
-                      Row(
-                        textDirection: TextDirection.rtl,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text("${_total} VND",
-                              style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red)),
-                          Text("Total: ", style: TextStyle(fontSize: 24)),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      )
-                    ],
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    "Shopping Cart",
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
+                Expanded(child: SizedBox()),
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        _total = 0;
+                        _counter = 0;
+                        _listBuy = "";
+                      });
+                    },
+                    child: Icon(
+                      Icons.autorenew_outlined,
+                      size: 30,
+                    ),
+                ),
+                SizedBox(width: 5,)
               ],
-            )
-          ],
-        ));
+            ),
+          ),
+          Expanded(
+              child: Container(
+            padding: const EdgeInsets.all(5),
+            child: ListView(
+              children: [
+                Text(
+                  _listBuy,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                )
+              ],
+            ),
+          )),
+          Container(
+            decoration: const BoxDecoration(
+                border: Border(
+              top: BorderSide(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            )),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: ElevatedButton(
+                        onPressed: () {}, child: const Text("Buy now"))),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      const Text("Quantity: ", style: TextStyle(fontSize: 14)),
+                      Text("${_counter}",
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))
+                    ]),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        const Text("Total: ", style: TextStyle(fontSize: 16)),
+                        Text("${_total} VND",
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red)),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  width: 10,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 }
